@@ -1,0 +1,18 @@
+{
+  "watch": [
+    "src",
+    "public",
+    "next.config.mjs",
+    "tailwind.config.js",
+    "postcss.config.mjs"
+  ],
+  "ext": "js,jsx,ts,tsx,json,css,mjs",
+  "ignore": [
+    "node_modules",
+    ".next",
+    ".git",
+    "package-lock.json"
+  ],
+  "exec": "next dev --turbopack",
+  "delay": 1000
+}
