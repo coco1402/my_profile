@@ -1,7 +1,7 @@
 'use client';
 
 import { Github, Linkedin, Mail } from 'lucide-react';
-import TextType from './TextType';
+import TextType from '../react-bits/TextType';
 
 export default function Hero() {
   return (

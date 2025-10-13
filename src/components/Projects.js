@@ -1,14 +1,25 @@
 'use client';
 
 import { ExternalLink } from 'lucide-react';
+import myProfileImg from '../assets/profile/my_profile.png';
 
 export default function Projects() {
   const projects = [
     {
       title: 'Full-Stack Mobile Marketplace Application',
-      description: 'Collaborated in team of 5 to build mobile app for buying/selling goods. Developed React Native UI with Firebase Auth, Firestore, real-time messaging via Gifted Chat, and geolocation filtering. Built RESTful APIs with Node.js/Express and MongoDB, deployed via Render.',
+      description: 'Built mobile app for buying/selling goods. Developed React Native UI with Firebase Auth, Firestore, real-time messaging via Gifted Chat, and geolocation filtering. Built RESTful APIs with Node.js/Express and MongoDB, deployed via Render.',
       tags: ['React Native', 'Node.js', 'MongoDB', 'Firebase', 'Express'],
-      github: 'https://github.com/coco1402/farmly-app'
+      github: 'https://github.com/coco1402/farmly-app',
+      image: '📱',
+      isEmoji: true
+    },
+    {
+      title: 'Portfolio Website',
+      description: 'Personal portfolio website built with Next.js, React, Tailwind CSS, and React Bits components.',
+      tags: ['Next.js', 'React', 'Tailwind CSS', 'JavaScript'],
+      github: 'https://github.com/coco1402/my_profile',
+      image: myProfileImg,
+      isEmoji: false
     }
   ];
 
@@ -18,14 +29,15 @@ export default function Projects() {
         <h2 className="text-5xl font-bold mb-12">
           My <span className="underline decoration-4 decoration-black">Projects</span>
         </h2>
-        <div className="flex justify-center">
-          <div className="max-w-md">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {projects.map((project, index) => (
             <div key={index} className="bg-white border-2 border-black rounded-lg overflow-hidden hover:shadow-2xl transition-all hover:-translate-y-1">
               <div className="h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                <div className="text-6xl">
-                  📱
-                </div>
+                {project.isEmoji ? (
+                  <div className="text-6xl">{project.image}</div>
+                ) : (
+                  <img src={project.image.src} alt={project.title} className="w-full h-full object-cover object-left" />
+                )}
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-3">{project.title}</h3>
@@ -48,7 +60,6 @@ export default function Projects() {
               </div>
             </div>
           ))}
-          </div>
         </div>
       </div>
     </section>
