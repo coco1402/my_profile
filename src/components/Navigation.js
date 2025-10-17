@@ -4,6 +4,18 @@ import { useState } from 'react';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [expandedSections, setExpandedSections] = useState({
+    0: true,
+    1: true,
+    2: true
+  });
+
+  const toggleSection = (index) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
 
   const navItems = [
     {
@@ -53,10 +65,15 @@ export default function Navigation() {
               <div className="absolute right-0 top-12 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden min-w-[250px]">
                 {navItems.map((section, idx) => (
                   <div key={idx} className="border-b last:border-b-0 border-gray-200">
-                    <div className="px-4 py-2 font-semibold text-sm text-gray-500 uppercase tracking-wider" style={{ backgroundColor: section.bgColor, color: '#fff' }}>
-                      {section.label}
+                    <div
+                      className="px-4 py-2 font-semibold text-sm text-gray-500 uppercase tracking-wider flex justify-between items-center cursor-pointer"
+                      style={{ backgroundColor: section.bgColor, color: '#fff' }}
+                      onClick={() => toggleSection(idx)}
+                    >
+                      <span>{section.label}</span>
+                      <span className="text-lg font-bold">{expandedSections[idx] ? '−' : '+'}</span>
                     </div>
-                    {section.links.map((link, i) => (
+                    {expandedSections[idx] && section.links.map((link, i) => (
                       <a
                         key={i}
                         href={link.href}

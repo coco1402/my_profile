@@ -2,6 +2,7 @@
 
 import { ExternalLink } from 'lucide-react';
 import myProfileImg from '../assets/profile/my_profile.png';
+import farmlyLogo from '../assets/profile/farmlyLogo.png';
 
 export default function Projects() {
   const projects = [
@@ -10,8 +11,8 @@ export default function Projects() {
       description: 'Built mobile app for buying/selling goods. Developed React Native UI with Firebase Auth, Firestore, real-time messaging via Gifted Chat, and geolocation filtering. Built RESTful APIs with Node.js/Express and MongoDB, deployed via Render.',
       tags: ['React Native', 'Node.js', 'MongoDB', 'Firebase', 'Express'],
       github: 'https://github.com/coco1402/farmly-app',
-      image: '📱',
-      isEmoji: true
+      image: farmlyLogo,
+      isEmoji: false
     },
     {
       title: 'Portfolio Website',
