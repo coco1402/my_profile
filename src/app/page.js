@@ -17,8 +17,8 @@ export default function Portfolio() {
       <Hero />
       <About />
       <Timeline />
-      <Skills />
       <Projects />
+      <Skills />
       <PhotoWall />
       <Contact />
       <Footer />

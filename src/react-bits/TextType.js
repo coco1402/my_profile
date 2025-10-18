@@ -9,7 +9,8 @@ export default function TextType({
   deletingSpeed = 50,
   showCursor = true,
   cursorCharacter = '|',
-  loop = true
+  loop = true,
+  onComplete = null
 }) {
   const texts = Array.isArray(text) ? text : [text];
   const [displayedText, setDisplayedText] = useState('');
@@ -17,15 +18,16 @@ export default function TextType({
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(true);
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
 
-  // Cursor blink
+  // Cursor blink - only blink while typing
   useEffect(() => {
-    if (!showCursor) return;
+    if (!showCursor || isTypingComplete) return;
     const interval = setInterval(() => {
       setCursorVisible(v => !v);
     }, 530);
     return () => clearInterval(interval);
-  }, [showCursor]);
+  }, [showCursor, isTypingComplete]);
 
   // Typing logic
   useEffect(() => {
@@ -40,8 +42,16 @@ export default function TextType({
           setDisplayedText(currentFullText.substring(0, charIndex + 1));
           setCharIndex(charIndex + 1);
         } else {
-          // Finished typing, wait then delete
-          if (loop || textIndex < texts.length - 1) {
+          // Finished typing
+          if (!loop && textIndex === texts.length - 1) {
+            // Don't loop and this is the last text - mark as complete
+            setIsTypingComplete(true);
+            setCursorVisible(false);
+            if (onComplete) {
+              onComplete();
+            }
+          } else if (loop || textIndex < texts.length - 1) {
+            // Wait then delete
             setTimeout(() => setIsDeleting(true), pauseDuration);
           }
         }

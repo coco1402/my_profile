@@ -1,7 +1,5 @@
 'use client';
 
-import { Award } from 'lucide-react';
-
 export default function Skills() {
   const skills = [
     { name: 'JavaScript', logo: '/assets/logo/JavaScript.png' },
@@ -21,9 +19,9 @@ export default function Skills() {
   return (
     <section id="skills" className="py-20 px-6 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-5xl font-bold mb-12">My <span className="underline decoration-4 decoration-black">Skills</span></h2>
+        <h2 className="text-5xl font-bold mb-12">Tech <span className="underline decoration-4 decoration-black">Stack</span></h2>
 
-        <div className="grid grid-cols-3 gap-6 mb-16 max-w-4xl mx-auto">
+        <div className="grid grid-cols-3 gap-6 max-w-4xl mx-auto">
           {skills.map((skill, index) => (
             <div key={index} className="p-6 border-2 border-black rounded-lg hover:bg-black hover:text-white transition-all group cursor-pointer">
               <div className="mb-4 flex justify-center">
@@ -32,19 +30,6 @@ export default function Skills() {
               <div className="text-sm font-semibold text-center">{skill.name}</div>
             </div>
           ))}
-        </div>
-
-        <div className="bg-white p-6 rounded-lg border border-gray-300 max-w-2xl mx-auto">
-          <h3 className="text-xl font-bold mb-4 flex items-center">
-            <Award className="mr-2" size={24} />
-            Certifications
-          </h3>
-          <div className="space-y-2 text-gray-700">
-            <p>☁️ <strong>AWS Cloud Practitioner</strong></p>
-            <p>☁️ <strong>Microsoft Azure AI-900</strong></p>
-            <p>📈 <strong>CFA Level 1</strong></p>
-            <p>💻 <strong>Coursera:</strong> Data Structures, Supervised ML, Advanced Learning Algorithms</p>
-          </div>
         </div>
       </div>
     </section>
