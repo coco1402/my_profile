@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export default function TextType({
   text = ["Coco Shen"],
@@ -19,6 +19,13 @@ export default function TextType({
   const [isDeleting, setIsDeleting] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(true);
   const [isTypingComplete, setIsTypingComplete] = useState(false);
+
+  // Memoize onComplete to prevent re-renders
+  const memoizedOnComplete = useCallback(() => {
+    if (onComplete) {
+      onComplete();
+    }
+  }, [onComplete]);
 
   // Cursor blink - only blink while typing
   useEffect(() => {
@@ -47,9 +54,7 @@ export default function TextType({
             // Don't loop and this is the last text - mark as complete
             setIsTypingComplete(true);
             setCursorVisible(false);
-            if (onComplete) {
-              onComplete();
-            }
+            memoizedOnComplete();
           } else if (loop || textIndex < texts.length - 1) {
             // Wait then delete
             setTimeout(() => setIsDeleting(true), pauseDuration);
@@ -72,7 +77,7 @@ export default function TextType({
     const timer = setTimeout(handleType, speed);
 
     return () => clearTimeout(timer);
-  }, [charIndex, isDeleting, textIndex, texts, typingSpeed, deletingSpeed, pauseDuration, loop]);
+  }, [charIndex, isDeleting, textIndex, texts, typingSpeed, deletingSpeed, pauseDuration, loop, memoizedOnComplete]);
 
   return (
     <span className="inline-block min-h-[1.5em]">

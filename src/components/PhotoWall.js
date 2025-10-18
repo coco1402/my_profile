@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { photosData, getCountriesForGlobe } from '../data/photosData';
 
 // Dynamically import Globe to avoid SSR issues
@@ -188,10 +189,11 @@ export default function PhotoWall() {
                         key={photo.id}
                         className="group relative overflow-hidden rounded-xl aspect-square cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                       >
-                        <img
+                        <Image
                           src={photo.src}
                           alt={`${photosData[selectedCountry].name} - ${photo.location}`}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <div className="absolute bottom-0 left-0 right-0 p-4 text-white">

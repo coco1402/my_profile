@@ -1,6 +1,7 @@
 'use client';
 
 import { ExternalLink } from 'lucide-react';
+import Image from 'next/image';
 import myProfileImg from '../assets/profile/my_profile.png';
 import farmlyLogo from '../assets/profile/farmlyLogo.png';
 import MagicBento from '../react-bits/MagicBento';
@@ -32,11 +33,12 @@ export default function Projects() {
     children: (
       <div className="flex flex-col justify-between h-full">
         {/* Project Image */}
-        <div className="mb-4 rounded-lg overflow-hidden">
-          <img
-            src={project.image.src}
+        <div className="mb-4 rounded-lg overflow-hidden relative h-48">
+          <Image
+            src={project.image}
             alt={project.title}
-            className="w-full h-48 object-cover object-left"
+            fill
+            className="object-cover object-left"
           />
         </div>
 

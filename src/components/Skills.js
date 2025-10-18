@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 export default function Skills() {
   const skills = [
     { name: 'JavaScript', logo: '/assets/logo/JavaScript.png' },
@@ -24,8 +26,8 @@ export default function Skills() {
         <div className="grid grid-cols-3 gap-6 max-w-4xl mx-auto">
           {skills.map((skill, index) => (
             <div key={index} className="p-6 border-2 border-black rounded-lg hover:bg-black hover:text-white transition-all group cursor-pointer">
-              <div className="mb-4 flex justify-center">
-                <img src={skill.logo} alt={skill.name} className="w-16 h-16 object-contain" />
+              <div className="mb-4 flex justify-center relative w-16 h-16 mx-auto">
+                <Image src={skill.logo} alt={skill.name} fill className="object-contain" />
               </div>
               <div className="text-sm font-semibold text-center">{skill.name}</div>
             </div>
