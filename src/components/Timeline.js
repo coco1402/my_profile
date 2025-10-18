@@ -71,7 +71,7 @@ export default function Timeline() {
       color: '#D4C4B8' // Light tan color
     },
     {
-      year: '2022',
+      year: '2025',
       title: 'Assistant Manager - Forensic Technology',
       subtitle: 'KPMG',
       period: 'Oct 2022 - Present',

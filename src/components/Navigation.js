@@ -1,94 +1,102 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Copyright } from 'lucide-react';
 
 export default function Navigation() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [expandedSections, setExpandedSections] = useState({
-    0: true,
-    1: true,
-    2: true
-  });
-
-  const toggleSection = (index) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
-  };
+  const [activeSection, setActiveSection] = useState('');
 
   const navItems = [
-    {
-      label: 'About',
-      bgColor: '#1e293b',
-      links: [
-        { label: 'Introduction', href: '#about' },
-        { label: 'Education & Experience', href: '#timeline' },
-        { label: 'Skills', href: '#skills' }
-      ]
-    },
-    {
-      label: 'Projects',
-      bgColor: '#334155',
-      links: [
-        { label: 'Projects', href: '#projects' },
-        { label: 'Moments', href: '#moments' }
-      ]
-    },
-    {
-      label: 'Contact',
-      bgColor: '#475569',
-      links: [
-        { label: 'Contact', href: '#contact' }
-      ]
-    }
+    { label: 'About', href: '#about' },
+    { label: 'Projects', href: '#projects' },
+    { label: 'Moments', href: '#moments' },
+    { label: 'Contact', href: '#contact' }
   ];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = navItems.map(item => item.href.replace('#', ''));
+      const scrollPosition = window.scrollY + 100;
+
+      for (const sectionId of sections) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          const sectionTop = section.offsetTop;
+          const sectionBottom = sectionTop + section.offsetHeight;
+
+          if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+            setActiveSection(`#${sectionId}`);
+            break;
+          }
+        }
+      }
+    };
+
+    handleScroll(); // Initial check
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex justify-between items-center">
-          <div className="text-2xl font-bold">Coco Shen</div>
-
-          <div className="relative">
-            <div
-              className="flex flex-col justify-center items-center w-10 h-10 gap-1.5 cursor-pointer hover:opacity-70"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <span className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-              <span className={`block w-6 h-0.5 bg-black transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : ''}`} />
-              <span className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+    <>
+      <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-6">
+        <nav className="flex items-center gap-2 bg-black/90 backdrop-blur-sm rounded-full px-3 py-3">
+          {/* Logo */}
+          <a
+            href="#"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-gray-100 transition-all duration-300"
+          >
+            <Copyright size={16} />
+            <div className="relative">
+              <span className="english-name block transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'Courier New', 'Monaco', monospace" }}>
+                Coded by Coco Shen
+              </span>
+              <span className="chinese-name block absolute top-0 left-0 whitespace-nowrap transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'STXingkai', 'LiSu', 'Xingkai SC', cursive" }}>
+                沈思其
+              </span>
             </div>
+          </a>
 
-            {isMenuOpen && (
-              <div className="absolute right-0 top-12 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden min-w-[250px]">
-                {navItems.map((section, idx) => (
-                  <div key={idx} className="border-b last:border-b-0 border-gray-200">
-                    <div
-                      className="px-4 py-2 font-semibold text-sm text-gray-500 uppercase tracking-wider flex justify-between items-center cursor-pointer"
-                      style={{ backgroundColor: section.bgColor, color: '#fff' }}
-                      onClick={() => toggleSection(idx)}
-                    >
-                      <span>{section.label}</span>
-                      <span className="text-lg font-bold">{expandedSections[idx] ? '−' : '+'}</span>
-                    </div>
-                    {expandedSections[idx] && section.links.map((link, i) => (
-                      <a
-                        key={i}
-                        href={link.href}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="block px-6 py-2 hover:bg-gray-100 cursor-pointer"
-                      >
-                        {link.label}
-                      </a>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
+          {/* Nav Items */}
+          <div className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.href;
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                    isActive
+                      ? 'bg-white text-black'
+                      : 'text-white hover:bg-white hover:text-black'
+                  }`}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
           </div>
-        </div>
+        </nav>
       </div>
-    </div>
+
+      <style jsx>{`
+        .english-name {
+          opacity: 1;
+        }
+
+        .chinese-name {
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        a:hover .english-name {
+          opacity: 0;
+        }
+
+        a:hover .chinese-name {
+          opacity: 1;
+        }
+      `}</style>
+    </>
   );
 }

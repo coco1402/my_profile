@@ -73,8 +73,8 @@ export default function Projects() {
   }));
 
   return (
-    <section id="projects" className="py-20 px-6 bg-white">
-      <div className="max-w-7xl mx-auto">
+    <section id="projects" className="min-h-screen flex flex-col justify-center py-20 px-6 bg-white">
+      <div className="max-w-7xl mx-auto w-full">
         <h2 className="text-5xl font-bold mb-12">
           My <span className="underline decoration-4 decoration-black">Projects</span>
         </h2>

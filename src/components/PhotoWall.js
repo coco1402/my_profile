@@ -82,9 +82,9 @@ export default function PhotoWall() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
           <h2 className="text-5xl font-bold mb-4 text-white">
-            My <span className="underline decoration-4 decoration-blue-400">Photography</span>
+            A Map of <span className="underline decoration-4 decoration-blue-400">Memories</span>
           </h2>
-          <p className="text-xl text-gray-300">Capturing moments from around the world</p>
+          <p className="text-xl text-gray-300">Capturing moments from every place my camera has been</p>
         </div>
 
         {/* Year Filter */}
