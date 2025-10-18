@@ -3,7 +3,7 @@
 export default function Experience() {
   const experiences = [
     {
-      company: 'KPMG',
+      company: 'KPMG UK',
       role: 'Assistant Manager - Forensic Technology',
       period: 'Oct 2022 - Present',
       location: 'London',

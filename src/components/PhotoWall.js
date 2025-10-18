@@ -1,163 +1,216 @@
 'use client';
 
-import { useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { photosData, getCountriesForGlobe } from '../data/photosData';
+
+// Dynamically import Globe to avoid SSR issues
+const Globe = dynamic(() => import('react-globe.gl'), { ssr: false });
 
 export default function PhotoWall() {
-  const scrollContainerRef = useRef(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedYear, setSelectedYear] = useState('all');
+  const [hoveredCountry, setHoveredCountry] = useState(null);
+  const [showGallery, setShowGallery] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 1200, height: 600 });
+  const globeEl = useRef();
+  const containerRef = useRef();
 
-  const photos = [
-    { id: 1, src: '/assets/photography/DSCF1105.JPG', size: 'large' },
-    { id: 2, src: '/assets/photography/DSCF1218.JPG', size: 'medium' },
-    { id: 3, src: '/assets/photography/DSCF1510.JPG', size: 'medium' },
-    { id: 4, src: '/assets/photography/DSCF1785.JPG', size: 'small' },
-    { id: 5, src: '/assets/photography/DSCF2123.JPG', size: 'large' },
-    { id: 6, src: '/assets/photography/DSCF2243.JPG', size: 'medium' },
-    { id: 7, src: '/assets/photography/DSCF2249.JPG', size: 'medium' },
-    { id: 8, src: '/assets/photography/DSCF2252.jpg', size: 'small' },
-    { id: 9, src: '/assets/photography/DSCF2277.JPG', size: 'large' },
-    { id: 10, src: '/assets/photography/DSCF2720.jpg', size: 'medium' },
-    { id: 11, src: '/assets/photography/DSCF2855.JPG', size: 'large' },
-    { id: 12, src: '/assets/photography/DSCF2942.jpg', size: 'medium' },
-    { id: 13, src: '/assets/photography/DSCF3071.JPG', size: 'large' },
-    { id: 14, src: '/assets/photography/DSCF3078.JPG', size: 'medium' },
-    { id: 15, src: '/assets/photography/DSCF3326.jpg', size: 'medium' },
-    { id: 16, src: '/assets/photography/DSCF3368.JPG', size: 'small' },
-    { id: 17, src: '/assets/photography/DSCF3425.jpg', size: 'large' },
-    { id: 18, src: '/assets/photography/DSCF3440.JPG', size: 'medium' },
-    { id: 19, src: '/assets/photography/DSCF3653.jpg', size: 'medium' },
-    { id: 20, src: '/assets/photography/DSCF3928.JPG', size: 'large' },
-    { id: 21, src: '/assets/photography/DSCF3945.JPG', size: 'medium' },
-    { id: 22, src: '/assets/photography/DSCF4640.JPG', size: 'large' },
-    { id: 23, src: '/assets/photography/DSCF5044.JPG', size: 'medium' },
-    { id: 24, src: '/assets/photography/DSCF5761.JPG', size: 'small' },
-    { id: 25, src: '/assets/photography/DSCF5831.JPG', size: 'large' },
-    { id: 26, src: '/assets/photography/DSCF5972.JPG', size: 'medium' },
-    { id: 27, src: '/assets/photography/FullSizeRender_VSCO.JPG', size: 'medium' },
-    { id: 28, src: '/assets/photography/autumn.jpeg', size: 'large' },
-  ];
+  const countries = getCountriesForGlobe();
+
+  // Get all unique years
+  const years = ['all'];
+  Object.values(photosData).forEach(country => {
+    country.photos.forEach(photo => {
+      if (!years.includes(photo.year)) {
+        years.push(photo.year);
+      }
+    });
+  });
+  years.sort((a, b) => {
+    if (a === 'all') return -1;
+    if (b === 'all') return 1;
+    return b - a;
+  });
+
+  // Filter photos based on selected year
+  const getFilteredPhotos = (countryData) => {
+    if (selectedYear === 'all') return countryData.photos;
+    return countryData.photos.filter(photo => photo.year === selectedYear);
+  };
+
+  const handleCountryClick = (country) => {
+    const countryKey = Object.keys(photosData).find(
+      key => photosData[key].name === country.country
+    );
+    if (countryKey) {
+      setSelectedCountry(countryKey);
+      setShowGallery(true);
+    }
+  };
+
+  const closeGallery = () => {
+    setShowGallery(false);
+    setTimeout(() => setSelectedCountry(null), 300);
+  };
+
+  useEffect(() => {
+    if (globeEl.current) {
+      // Auto-rotate
+      globeEl.current.controls().autoRotate = true;
+      globeEl.current.controls().autoRotateSpeed = 0.5;
+    }
+  }, []);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        setDimensions({
+          width: containerRef.current.offsetWidth,
+          height: 600
+        });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
 
   return (
-    <section id="moments" className="py-20 px-6 bg-white">
+    <section id="moments" className="py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-800 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <h2 className="text-5xl font-bold mb-4">
-            My <span className="underline decoration-4 decoration-black">Photography</span>
+          <h2 className="text-5xl font-bold mb-4 text-white">
+            My <span className="underline decoration-4 decoration-blue-400">Photography</span>
           </h2>
-          <p className="text-xl text-gray-600">Exploring the Art of Light and Shadow</p>
+          <p className="text-xl text-gray-300">Capturing moments from around the world</p>
         </div>
 
-        {/* Horizontal Scrollable Gallery - Use mouse wheel or touch to scroll */}
-        <div className="relative group">
-          {/* Scrollable Container - 2 Rows - Supports wheel and touch scrolling */}
-          <div
-            ref={scrollContainerRef}
-            className="overflow-x-auto overflow-y-hidden"
-            style={{
-              scrollbarWidth: 'thin',
-              scrollbarColor: '#cbd5e0 transparent',
-              WebkitOverflowScrolling: 'touch'
-            }}
-          >
-            <div className="inline-flex flex-col gap-4 pr-8">
-              {/* Row 1 */}
-              <div className="flex gap-4">
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[600px] h-[380px]">
-                  <img src={photos[0].src} alt="Photo 1" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[350px] h-[380px]">
-                  <img src={photos[1].src} alt="Photo 2" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[500px] h-[380px]">
-                  <img src={photos[2].src} alt="Photo 3" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[400px] h-[380px]">
-                  <img src={photos[3].src} alt="Photo 4" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[550px] h-[380px]">
-                  <img src={photos[4].src} alt="Photo 5" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[450px] h-[380px]">
-                  <img src={photos[5].src} alt="Photo 6" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[600px] h-[380px]">
-                  <img src={photos[6].src} alt="Photo 7" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[350px] h-[380px]">
-                  <img src={photos[7].src} alt="Photo 8" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[500px] h-[380px]">
-                  <img src={photos[8].src} alt="Photo 9" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[400px] h-[380px]">
-                  <img src={photos[9].src} alt="Photo 10" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[550px] h-[380px]">
-                  <img src={photos[10].src} alt="Photo 11" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[450px] h-[380px]">
-                  <img src={photos[11].src} alt="Photo 12" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[600px] h-[380px]">
-                  <img src={photos[12].src} alt="Photo 13" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[350px] h-[380px]">
-                  <img src={photos[13].src} alt="Photo 14" className="w-full h-full object-cover" />
-                </div>
-              </div>
+        {/* Year Filter */}
+        <div className="flex justify-center gap-3 mb-8">
+          {years.map(year => (
+            <button
+              key={year}
+              onClick={() => setSelectedYear(year)}
+              className={`px-6 py-2 rounded-full transition-all duration-300 ${
+                selectedYear === year
+                  ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/50'
+                  : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+              }`}
+            >
+              {year === 'all' ? 'All' : year}
+            </button>
+          ))}
+        </div>
 
-              {/* Row 2 */}
-              <div className="flex gap-4">
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[450px] h-[380px]">
-                  <img src={photos[14].src} alt="Photo 15" className="w-full h-full object-cover" />
+        {/* 3D Globe */}
+        <div ref={containerRef} className="relative bg-slate-800/50 rounded-3xl overflow-hidden shadow-2xl mb-8">
+          <div className="h-[600px] w-full relative flex items-center justify-center">
+            <Globe
+              ref={globeEl}
+              width={dimensions.width}
+              height={dimensions.height}
+              globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+              backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+
+              // Points for countries
+              pointsData={countries}
+              pointLat={d => d.lat}
+              pointLng={d => d.lng}
+              pointColor={() => '#60a5fa'}
+              pointAltitude={0.01}
+              pointRadius={0.5}
+              pointLabel={d => `
+                <div class="bg-slate-800 text-white px-3 py-2 rounded-lg shadow-xl">
+                  <div class="font-bold">${d.country}</div>
+                  <div class="text-xs text-blue-400 mt-1">${d.photoCount} photos</div>
                 </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[600px] h-[380px]">
-                  <img src={photos[15].src} alt="Photo 16" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[350px] h-[380px]">
-                  <img src={photos[16].src} alt="Photo 17" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[500px] h-[380px]">
-                  <img src={photos[17].src} alt="Photo 18" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[400px] h-[380px]">
-                  <img src={photos[18].src} alt="Photo 19" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[550px] h-[380px]">
-                  <img src={photos[19].src} alt="Photo 20" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[450px] h-[380px]">
-                  <img src={photos[20].src} alt="Photo 21" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[600px] h-[380px]">
-                  <img src={photos[21].src} alt="Photo 22" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[350px] h-[380px]">
-                  <img src={photos[22].src} alt="Photo 23" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[500px] h-[380px]">
-                  <img src={photos[23].src} alt="Photo 24" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[400px] h-[380px]">
-                  <img src={photos[24].src} alt="Photo 25" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[550px] h-[380px]">
-                  <img src={photos[25].src} alt="Photo 26" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[450px] h-[380px]">
-                  <img src={photos[26].src} alt="Photo 27" className="w-full h-full object-cover" />
-                </div>
-                <div className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-[600px] h-[380px]">
-                  <img src={photos[27].src} alt="Photo 28" className="w-full h-full object-cover" />
-                </div>
-              </div>
+              `}
+
+              // Rings around points
+              ringsData={countries}
+              ringLat={d => d.lat}
+              ringLng={d => d.lng}
+              ringColor={() => hoveredCountry ? (t) => `rgba(96, 165, 250, ${1 - t})` : () => 'rgba(96, 165, 250, 0.3)'}
+              ringMaxRadius={2}
+              ringPropagationSpeed={2}
+              ringRepeatPeriod={1000}
+
+              onPointClick={handleCountryClick}
+              onPointHover={country => setHoveredCountry(country ? country.country : null)}
+            />
+
+            {/* Instructions overlay */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-slate-800/80 backdrop-blur-sm text-white px-6 py-3 rounded-full text-sm">
+              🌍 Click on a country to view photos
             </div>
           </div>
         </div>
 
-        {/* Instruction text */}
-        <p className="text-center text-gray-500 mt-6 text-sm">
-          ← Scroll with mouse wheel or swipe to browse photos →
-        </p>
+        {/* Photo Gallery Modal */}
+        {showGallery && selectedCountry && (
+          <div
+            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-opacity duration-300 ${
+              showGallery ? 'opacity-100' : 'opacity-0'
+            }`}
+            onClick={closeGallery}
+          >
+            <div
+              className="relative max-w-6xl w-full max-h-[90vh] overflow-y-auto mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <button
+                onClick={closeGallery}
+                className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-all duration-300"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              {/* Country Header */}
+              <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-t-2xl">
+                <h3 className="text-4xl font-bold mb-2">{photosData[selectedCountry].name}</h3>
+                <p className="text-sm mt-2 opacity-75">
+                  {getFilteredPhotos(photosData[selectedCountry]).length} photos
+                  {selectedYear !== 'all' && ` from ${selectedYear}`}
+                </p>
+              </div>
+
+              {/* Photos Grid */}
+              <div className="bg-slate-800 p-6 rounded-b-2xl">
+                {getFilteredPhotos(photosData[selectedCountry]).length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {getFilteredPhotos(photosData[selectedCountry]).map((photo) => (
+                      <div
+                        key={photo.id}
+                        className="group relative overflow-hidden rounded-xl aspect-square cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                      >
+                        <img
+                          src={photo.src}
+                          alt={`${photosData[selectedCountry].name} - ${photo.location}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                            <p className="font-semibold">{photo.location}</p>
+                            <p className="text-sm text-gray-300">{photo.year}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-gray-400">
+                    No photos from {selectedYear} in {photosData[selectedCountry].name}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

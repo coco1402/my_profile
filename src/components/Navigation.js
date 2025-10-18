@@ -23,7 +23,7 @@ export default function Navigation() {
       bgColor: '#1e293b',
       links: [
         { label: 'Introduction', href: '#about' },
-        { label: 'Education', href: '#education' },
+        { label: 'Education & Experience', href: '#timeline' },
         { label: 'Skills', href: '#skills' }
       ]
     },
@@ -31,7 +31,6 @@ export default function Navigation() {
       label: 'Projects',
       bgColor: '#334155',
       links: [
-        { label: 'Experience', href: '#experience' },
         { label: 'Projects', href: '#projects' },
         { label: 'Moments', href: '#moments' }
       ]
