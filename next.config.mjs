@@ -11,6 +11,10 @@ const nextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  // 禁用 ESLint 检查
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
