@@ -20,13 +20,15 @@ export default function Contact() {
       { threshold: 0.1 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentSection = sectionRef.current;
+
+    if (currentSection) {
+      observer.observe(currentSection);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentSection) {
+        observer.unobserve(currentSection);
       }
     };
   }, []);
@@ -42,7 +44,7 @@ export default function Contact() {
             }`}
             style={{ transitionDelay: '200ms' }}
           >
-            If someone told my 14-year-old self what I'd be doing in my twenties, I wouldn't have believed them.
+            If someone told my 14-year-old self what I&apos;d be doing in my twenties, I wouldn&apos;t have believed them.
           </p>
           <p
             className={`text-3xl md:text-4xl text-gray-700 transition-all duration-1000 ease-out ${
@@ -58,7 +60,7 @@ export default function Contact() {
             }`}
             style={{ transitionDelay: '1000ms' }}
           >
-            Life is so random, but that's what makes it fun.
+            Life is so random, but that&apos;s what makes it fun.
           </p>
           <p
             className={`text-3xl md:text-4xl text-gray-700 transition-all duration-1000 ease-out ${
@@ -91,7 +93,7 @@ export default function Contact() {
             Thanks for reading this far.
           </p>
           <p className="text-xl text-gray-600 leading-relaxed mt-3">
-            If you have something to share, I'd love to hear from you 👇
+            If you have something to share, I&apos;d love to hear from you 👇
           </p>
         </div>
 

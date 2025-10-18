@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowDown } from 'lucide-react';
+import Image from 'next/image';
 import TextType from '../react-bits/TextType';
 
 export default function Hero() {
@@ -11,10 +12,12 @@ export default function Hero() {
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
       {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
-        <img
+        <Image
           src="/assets/profile/about-me.png"
           alt="Background"
-          className="w-full h-full object-cover opacity-30 blur-sm grayscale"
+          fill
+          className="object-cover opacity-30 blur-sm grayscale"
+          priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/40 to-white/60"></div>
       </div>
@@ -70,7 +73,7 @@ export default function Hero() {
           transform: showElements ? 'translateY(0)' : 'translateY(20px)',
           transitionDelay: showElements ? '0.4s' : '0s'
         }}>
-          .v 2.0
+          .v 2.1
         </div>
 
         {/* Scroll indicator */}

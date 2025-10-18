@@ -39,7 +39,7 @@ export default function ContactPage() {
       <div className="max-w-2xl w-full">
         {/* Title */}
         <h1 className="text-7xl md:text-8xl font-bold text-center mb-16 tracking-tight">
-          Let's Talk!
+          Let&apos;s Talk!
         </h1>
 
         {/* Form */}
@@ -47,7 +47,7 @@ export default function ContactPage() {
           {/* Name field */}
           <div className="relative">
             <label htmlFor="name" className="absolute -top-3 left-4 bg-[#e8e4dc] px-2 text-sm text-gray-600">
-              Ab. What's ur Name?
+              Ab. What&apos;s ur Name?
             </label>
             <input
               type="text"
@@ -81,7 +81,7 @@ export default function ContactPage() {
           {/* Message field */}
           <div className="relative">
             <label htmlFor="message" className="absolute -top-3 left-4 bg-[#e8e4dc] px-2 text-sm text-gray-600">
-              What's on your mind?
+              What&apos;s on your mind?
             </label>
             <textarea
               id="message"
