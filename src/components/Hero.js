@@ -5,13 +5,13 @@ import TextType from '../react-bits/TextType';
 
 export default function Hero() {
   return (
-    <section className="pt-32 pb-20 px-6 bg-gradient-to-b from-gray-50 to-white">
+    <section className="min-h-screen flex items-center pt-32 pb-20 px-6 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
         <div>
           <h1 className="text-6xl font-bold mb-6">
             Hello! I'm <span className="block mt-2">
               <TextType
-                text={["Coco Shen", "a Full Stack Engineer", "based in London"]}
+                text={["Coco Shen", "a girl who codes", "based in London"]}
                 typingSpeed={75}
                 pauseDuration={1500}
                 deletingSpeed={50}

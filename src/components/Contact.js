@@ -1,95 +1,71 @@
 'use client';
 
 import { Github, Linkedin, Mail } from 'lucide-react';
-import { useState } from 'react';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Create mailto link with form data
-    const subject = encodeURIComponent(`Message from ${formData.name}`);
-    const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
-    window.location.href = `mailto:ssq1402@gmail.com?subject=${subject}&body=${body}`;
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
 
   return (
-    <section id="contact" className="py-20 px-6 bg-white">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-5xl font-bold mb-8 text-center">
+    <section id="contact" className="min-h-screen flex items-center justify-center py-20 px-6 bg-gradient-to-br from-gray-50 to-white">
+      <div className="max-w-3xl mx-auto text-center">
+        <h2 className="text-6xl font-bold mb-16">
           <span className="inline-block hover:scale-110 transition-transform duration-300">Let's</span>{' '}
           <span className="inline-block hover:scale-110 transition-transform duration-300">Connect</span>{' '}
           <span className="inline-block animate-bounce">👋</span>
         </h2>
 
-        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
-          <div>
-            <input
-              type="text"
-              name="name"
-              placeholder="name"
-              required
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full px-6 py-4 border-2 border-black rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black"
-            />
+        {/* Personal reflection section */}
+        <div className="space-y-6 mb-16">
+          <p className="text-xl leading-relaxed text-gray-800">
+            If someone told my 14-year-old self what I'd be doing in my twenties, I wouldn't have believed them.
+          </p>
+          <p className="text-xl leading-relaxed text-gray-800">
+            So what about the next decade? What will I become?
+          </p>
+          <p className="text-xl leading-relaxed text-gray-800">
+            Life is so random but that's what makes it fun.
+          </p>
+          <div className="pt-8 space-y-4">
+            <p className="text-xl leading-relaxed text-gray-800">
+              Thank you for reading it this far.
+            </p>
+            <p className="text-xl leading-relaxed text-gray-900 font-medium">
+              If you have something to share, I'd love to hear from you ✨
+            </p>
           </div>
+        </div>
 
-          <div>
-            <input
-              type="email"
-              name="email"
-              placeholder="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-6 py-4 border-2 border-black rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black"
-            />
-          </div>
-
-          <div>
-            <textarea
-              name="message"
-              placeholder="message"
-              required
-              rows="6"
-              value={formData.message}
-              onChange={handleChange}
-              className="w-full px-6 py-4 border-2 border-black rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-black resize-none"
-            />
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="px-12 py-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-lg font-semibold"
-            >
-              Stay in touch
-            </button>
-          </div>
-        </form>
-
-        <div className="flex justify-center gap-6 mt-12">
-          <a href="mailto:ssq1402@gmail.com" className="p-3 border-2 border-black rounded-lg hover:bg-black hover:text-white transition-colors">
-            <Mail size={24} />
+        {/* Social icons */}
+        <div className="flex justify-center gap-8">
+          <a
+            href="mailto:ssq1402@gmail.com"
+            className="group flex flex-col items-center gap-2 transition-transform hover:scale-110"
+            aria-label="Email"
+          >
+            <div className="p-4 border-2 border-black rounded-2xl group-hover:bg-black group-hover:text-white transition-all">
+              <Mail size={32} />
+            </div>
           </a>
-          <a href="https://www.linkedin.com/in/siqi-coco-shen-738509175/" target="_blank" rel="noopener noreferrer" className="p-3 border-2 border-black rounded-lg hover:bg-black hover:text-white transition-colors">
-            <Linkedin size={24} />
+          <a
+            href="https://www.linkedin.com/in/siqi-coco-shen-738509175/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex flex-col items-center gap-2 transition-transform hover:scale-110"
+            aria-label="LinkedIn"
+          >
+            <div className="p-4 border-2 border-black rounded-2xl group-hover:bg-black group-hover:text-white transition-all">
+              <Linkedin size={32} />
+            </div>
           </a>
-          <a href="https://github.com/coco1402/farmly-app" target="_blank" rel="noopener noreferrer" className="p-3 border-2 border-black rounded-lg hover:bg-black hover:text-white transition-colors">
-            <Github size={24} />
+          <a
+            href="https://github.com/coco1402/farmly-app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex flex-col items-center gap-2 transition-transform hover:scale-110"
+            aria-label="GitHub"
+          >
+            <div className="p-4 border-2 border-black rounded-2xl group-hover:bg-black group-hover:text-white transition-all">
+              <Github size={32} />
+            </div>
           </a>
         </div>
       </div>

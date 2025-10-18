@@ -3,6 +3,7 @@
 import { ExternalLink } from 'lucide-react';
 import myProfileImg from '../assets/profile/my_profile.png';
 import farmlyLogo from '../assets/profile/farmlyLogo.png';
+import MagicBento from '../react-bits/MagicBento';
 
 export default function Projects() {
   const projects = [
@@ -24,43 +25,74 @@ export default function Projects() {
     }
   ];
 
+  // Transform projects data for MagicBento
+  const bentoCards = projects.map((project, index) => ({
+    color: '#060010',
+    label: `Project ${index + 1}`,
+    children: (
+      <div className="flex flex-col justify-between h-full">
+        {/* Project Image */}
+        <div className="mb-4 rounded-lg overflow-hidden">
+          <img
+            src={project.image.src}
+            alt={project.title}
+            className="w-full h-48 object-cover object-left"
+          />
+        </div>
+
+        {/* Project Content */}
+        <div className="flex-1">
+          <h3 className="text-lg font-bold mb-2 text-white">{project.title}</h3>
+          <p className="text-sm text-gray-300 mb-3">{project.description}</p>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 mb-3">
+            {project.tags.map((tag, i) => (
+              <span
+                key={i}
+                className="px-2 py-1 bg-purple-900/30 text-purple-200 text-xs rounded-full border border-purple-700/50"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* Link */}
+          <a
+            href={project.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 font-semibold text-sm transition-all hover:gap-3"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Learn More <ExternalLink size={14} />
+          </a>
+        </div>
+      </div>
+    )
+  }));
+
   return (
-    <section id="projects" className="py-20 px-6 bg-gray-50">
+    <section id="projects" className="py-20 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-5xl font-bold mb-12">
           My <span className="underline decoration-4 decoration-black">Projects</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {projects.map((project, index) => (
-            <div key={index} className="bg-white border-2 border-black rounded-lg overflow-hidden hover:shadow-2xl transition-all hover:-translate-y-1">
-              <div className="h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                {project.isEmoji ? (
-                  <div className="text-6xl">{project.image}</div>
-                ) : (
-                  <img src={project.image.src} alt={project.title} className="w-full h-full object-cover object-left" />
-                )}
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-3">{project.title}</h3>
-                <p className="text-gray-600 mb-4 leading-relaxed">{project.description}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map((tag, i) => (
-                    <span key={i} className="px-3 py-1 bg-gray-100 text-sm rounded-full border border-gray-300 font-medium">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-black font-semibold hover:gap-3 transition-all"
-                >
-                  Learn More <ExternalLink size={16} />
-                </a>
-              </div>
-            </div>
-          ))}
+
+        <div className="flex justify-center">
+          <MagicBento
+            cardData={bentoCards}
+            textAutoHide={false}
+            enableStars={true}
+            enableSpotlight={true}
+            enableBorderGlow={true}
+            enableTilt={true}
+            enableMagnetism={true}
+            clickEffect={true}
+            spotlightRadius={300}
+            particleCount={12}
+            glowColor="132, 0, 255"
+          />
         </div>
       </div>
     </section>

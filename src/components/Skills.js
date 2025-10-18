@@ -34,35 +34,16 @@ export default function Skills() {
           ))}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-white p-6 rounded-lg border border-gray-300">
-            <h3 className="text-xl font-bold mb-4 flex items-center">
-              <Award className="mr-2" size={24} />
-              Languages
-            </h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="font-semibold">English</span>
-                <span className="px-3 py-1 bg-black text-white rounded-full text-sm">Fluent</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="font-semibold">Mandarin</span>
-                <span className="px-3 py-1 bg-black text-white rounded-full text-sm">Native</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg border border-gray-300">
-            <h3 className="text-xl font-bold mb-4 flex items-center">
-              <Award className="mr-2" size={24} />
-              Certifications
-            </h3>
-            <div className="space-y-2 text-gray-700">
-              <p>☁️ <strong>AWS Cloud Practitioner</strong></p>
-              <p>☁️ <strong>Microsoft Azure AI-900</strong></p>
-              <p>📈 <strong>CFA Level 1</strong></p>
-              <p>💻 <strong>Coursera:</strong> Data Structures, Supervised ML, Advanced Learning Algorithms</p>
-            </div>
+        <div className="bg-white p-6 rounded-lg border border-gray-300 max-w-2xl mx-auto">
+          <h3 className="text-xl font-bold mb-4 flex items-center">
+            <Award className="mr-2" size={24} />
+            Certifications
+          </h3>
+          <div className="space-y-2 text-gray-700">
+            <p>☁️ <strong>AWS Cloud Practitioner</strong></p>
+            <p>☁️ <strong>Microsoft Azure AI-900</strong></p>
+            <p>📈 <strong>CFA Level 1</strong></p>
+            <p>💻 <strong>Coursera:</strong> Data Structures, Supervised ML, Advanced Learning Algorithms</p>
           </div>
         </div>
       </div>
