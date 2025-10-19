@@ -18,8 +18,8 @@ export default function Projects() {
     },
     {
       title: 'Portfolio Website',
-      description: 'Personal portfolio website built with Next.js, React, Tailwind CSS, and React Bits components.',
-      tags: ['Next.js', 'React', 'Tailwind CSS', 'JavaScript'],
+      description: 'Personal portfolio website featuring smooth scrolling animations with Lenis, interactive components, and modern UI. Deployed on Vercel with custom domain cocoshen.com.',
+      tags: ['Next.js', 'React', 'Tailwind CSS', 'Lenis', 'Vercel'],
       github: 'https://github.com/coco1402/my_profile',
       image: myProfileImg,
       isEmoji: false

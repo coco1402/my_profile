@@ -38,24 +38,23 @@ export default function ContactPage() {
 
       <div className="max-w-2xl w-full">
         {/* Title */}
-        <h1 className="text-7xl md:text-8xl font-bold text-center mb-16 tracking-tight">
-          Let&apos;s Talk!
+        <h1 className="text-7xl md:text-8xl font-bold text-center mb-16 tracking-tight relative">
+          <span className="title-gradient inline-block hover-wave">
+            Let&apos;s Talk!
+          </span>
         </h1>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name field */}
           <div className="relative">
-            <label htmlFor="name" className="absolute -top-3 left-4 bg-[#e8e4dc] px-2 text-sm text-gray-600">
-              Ab. What&apos;s ur Name?
-            </label>
             <input
               type="text"
               id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="What's Your Name?"
+              placeholder="What's Your Name*"
               required
               className="w-full px-6 py-4 border-2 border-gray-800 rounded-lg bg-transparent focus:outline-none focus:border-gray-600 transition-colors text-lg"
             />
@@ -63,16 +62,13 @@ export default function ContactPage() {
 
           {/* Email field */}
           <div className="relative">
-            <label htmlFor="email" className="absolute -top-3 left-4 bg-[#e8e4dc] px-2 text-sm text-gray-600">
-              or uhm. yourmail@huhwhere?.com
-            </label>
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="What's Your Email?"
+              placeholder="What's Your Email*"
               required
               className="w-full px-6 py-4 border-2 border-gray-800 rounded-lg bg-transparent focus:outline-none focus:border-gray-600 transition-colors text-lg"
             />
@@ -80,15 +76,12 @@ export default function ContactPage() {
 
           {/* Message field */}
           <div className="relative">
-            <label htmlFor="message" className="absolute -top-3 left-4 bg-[#e8e4dc] px-2 text-sm text-gray-600">
-              What&apos;s on your mind?
-            </label>
             <textarea
               id="message"
               name="message"
               value={formData.message}
               onChange={handleChange}
-              placeholder="Write Something..."
+              placeholder="Write Something*"
               required
               rows={6}
               className="w-full px-6 py-4 border-2 border-gray-800 rounded-lg bg-transparent focus:outline-none focus:border-gray-600 transition-colors resize-none text-lg"
@@ -118,8 +111,65 @@ export default function ContactPage() {
             transform: scale(1);
           }
         }
+
+        @keyframes gradient {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-10px) rotate(2deg);
+          }
+        }
+
         .animate-fadeIn {
           animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .title-gradient {
+          background: linear-gradient(
+            135deg,
+            #d97757,
+            #c56647,
+            #e08b6f,
+            #d97757
+          );
+          background-size: 300% 300%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: gradient 3s ease infinite;
+          text-shadow: 0 4px 20px rgba(217, 119, 87, 0.3);
+          position: relative;
+        }
+
+        .title-gradient::after {
+          content: 'Let\\'s Talk!';
+          position: absolute;
+          left: 0;
+          top: 0;
+          z-index: -1;
+          background: linear-gradient(135deg, #d97757, #c56647);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          filter: blur(20px);
+          opacity: 0.5;
+        }
+
+        .hover-wave:hover {
+          animation: float 0.6s ease-in-out;
         }
       `}</style>
     </div>

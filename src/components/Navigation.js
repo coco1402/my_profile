@@ -1,16 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Copyright } from 'lucide-react';
 
 export default function Navigation() {
   const [activeSection, setActiveSection] = useState('');
+  const router = useRouter();
 
   const navItems = [
     { label: 'About', href: '#about' },
     { label: 'Projects', href: '#projects' },
     { label: 'Moments', href: '#moments' },
-    { label: 'Contact', href: '#contact' }
+    { label: 'Contact', href: '/contact', isRoute: true }
   ];
 
   useEffect(() => {
@@ -61,6 +63,19 @@ export default function Navigation() {
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
               const isActive = activeSection === item.href;
+
+              if (item.isRoute) {
+                return (
+                  <button
+                    key={item.href}
+                    onClick={() => router.push(item.href)}
+                    className="px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 text-white hover:bg-white hover:text-black"
+                  >
+                    {item.label}
+                  </button>
+                );
+              }
+
               return (
                 <a
                   key={item.href}

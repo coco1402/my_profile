@@ -141,7 +141,7 @@ export default function Timeline() {
                       <div className="pr-20 text-right">
                         <h3 className="text-xl font-bold text-white mb-1">{event.title}</h3>
                         <p className="text-gray-300 mb-2">{event.subtitle}</p>
-                        <p className="text-sm text-gray-400 leading-relaxed">{event.description}</p>
+                        <div className="text-sm text-gray-400 leading-relaxed">{event.description}</div>
                       </div>
                     )}
                   </div>
@@ -166,7 +166,7 @@ export default function Timeline() {
                       <div className="pl-20 text-left">
                         <h3 className="text-xl font-bold text-white mb-1">{event.title}</h3>
                         <p className="text-gray-300 mb-2">{event.subtitle}</p>
-                        <p className="text-sm text-gray-400 leading-relaxed">{event.description}</p>
+                        <div className="text-sm text-gray-400 leading-relaxed">{event.description}</div>
                       </div>
                     )}
                   </div>
