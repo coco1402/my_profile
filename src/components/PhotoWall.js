@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { photosData, getCountriesForGlobe } from '../data/photosData';
+import { useLenis } from './SmoothScroll';
 
 // Dynamically import Globe to avoid SSR issues
 const Globe = dynamic(() => import('react-globe.gl'), { ssr: false });
@@ -16,6 +17,7 @@ export default function PhotoWall() {
   const [dimensions, setDimensions] = useState({ width: 1200, height: 600 });
   const globeEl = useRef();
   const containerRef = useRef();
+  const lenis = useLenis();
 
   const countries = getCountriesForGlobe();
 
@@ -77,6 +79,16 @@ export default function PhotoWall() {
     window.addEventListener('resize', updateDimensions);
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
+
+  // Stop Lenis smooth scroll when modal is open
+  useEffect(() => {
+    if (showGallery && lenis) {
+      lenis.stop();
+      return () => {
+        lenis.start();
+      };
+    }
+  }, [showGallery, lenis]);
 
   return (
     <section id="moments" className="py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-800 min-h-screen">
@@ -151,64 +163,63 @@ export default function PhotoWall() {
 
         {/* Photo Gallery Modal */}
         {showGallery && selectedCountry && (
-          <div
-            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-opacity duration-300 ${
-              showGallery ? 'opacity-100' : 'opacity-0'
-            }`}
-            onClick={closeGallery}
-          >
+          <div className="fixed inset-0 z-50" onClick={closeGallery}>
+            <div className="absolute inset-0 bg-black/90 backdrop-blur-sm"></div>
             <div
-              className="relative max-w-6xl w-full max-h-[90vh] overflow-y-auto mx-4"
+              className="absolute inset-0 overflow-y-scroll p-4"
+              data-lenis-prevent
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close button */}
-              <button
-                onClick={closeGallery}
-                className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-all duration-300"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+              <div className="max-w-6xl mx-auto py-8 relative">
+                  {/* Country Header */}
+                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-t-2xl relative">
+                    {/* Close button */}
+                    <button
+                      onClick={closeGallery}
+                      className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-all duration-300 cursor-pointer"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
 
-              {/* Country Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-t-2xl">
-                <h3 className="text-4xl font-bold mb-2">{photosData[selectedCountry].name}</h3>
-                <p className="text-sm mt-2 opacity-75">
-                  {getFilteredPhotos(photosData[selectedCountry]).length} photos
-                  {selectedYear !== 'all' && ` from ${selectedYear}`}
-                </p>
-              </div>
+                    <h3 className="text-4xl font-bold mb-2">{photosData[selectedCountry].name}</h3>
+                    <p className="text-sm mt-2 opacity-75">
+                      {getFilteredPhotos(photosData[selectedCountry]).length} photos
+                      {selectedYear !== 'all' && ` from ${selectedYear}`}
+                    </p>
+                  </div>
 
-              {/* Photos Grid */}
-              <div className="bg-slate-800 p-6 rounded-b-2xl">
-                {getFilteredPhotos(photosData[selectedCountry]).length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {getFilteredPhotos(photosData[selectedCountry]).map((photo) => (
-                      <div
-                        key={photo.id}
-                        className="group relative overflow-hidden rounded-xl aspect-square cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                      >
-                        <Image
-                          src={photo.src}
-                          alt={`${photosData[selectedCountry].name} - ${photo.location}`}
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                            <p className="font-semibold">{photo.location}</p>
-                            <p className="text-sm text-gray-300">{photo.year}</p>
+                  {/* Photos Grid */}
+                  <div className="bg-slate-800 p-6 rounded-b-2xl">
+                    {getFilteredPhotos(photosData[selectedCountry]).length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {getFilteredPhotos(photosData[selectedCountry]).map((photo) => (
+                          <div
+                            key={photo.id}
+                            className="group relative overflow-hidden rounded-xl aspect-square cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                          >
+                            <Image
+                              src={photo.src}
+                              alt={`${photosData[selectedCountry].name} - ${photo.location}`}
+                              fill
+                              className="object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                                <p className="font-semibold">{photo.location}</p>
+                                <p className="text-sm text-gray-300">{photo.year}</p>
+                              </div>
+                            </div>
                           </div>
-                        </div>
+                        ))}
                       </div>
-                    ))}
+                    ) : (
+                      <div className="text-center py-12 text-gray-400">
+                        No photos from {selectedYear} in {photosData[selectedCountry].name}
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className="text-center py-12 text-gray-400">
-                    No photos from {selectedYear} in {photosData[selectedCountry].name}
-                  </div>
-                )}
               </div>
             </div>
           </div>
