@@ -1,12 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowDown } from 'lucide-react';
 import Image from 'next/image';
 import TextType from '../react-bits/TextType';
 
 export default function Hero() {
   const [showElements, setShowElements] = useState(false);
+  const [startTyping, setStartTyping] = useState(false);
+
+  useEffect(() => {
+    // Wait for curve animation to complete before starting typing
+    const timer = setTimeout(() => {
+      setStartTyping(true);
+    }, 1800); // Match curve animation end time (1.5s delay + 0.3s duration)
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
@@ -26,16 +36,18 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col items-center justify-center flex-1">
         {/* Name with handwriting style and typing effect */}
         <h1 className="text-8xl md:text-9xl font-bold mb-6 text-center" style={{ fontFamily: "'Brush Script MT', cursive" }}>
-          <TextType
-            text={["Coco Shen"]}
-            typingSpeed={100}
-            pauseDuration={2000}
-            deletingSpeed={60}
-            showCursor={true}
-            cursorCharacter="|"
-            loop={false}
-            onComplete={() => setShowElements(true)}
-          />
+          {startTyping && (
+            <TextType
+              text={["Coco Shen"]}
+              typingSpeed={100}
+              pauseDuration={2000}
+              deletingSpeed={60}
+              showCursor={true}
+              cursorCharacter="|"
+              loop={false}
+              onComplete={() => setShowElements(true)}
+            />
+          )}
         </h1>
 
         {/* Subtitle - always rendered but initially invisible */}

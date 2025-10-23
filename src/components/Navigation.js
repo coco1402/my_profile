@@ -13,7 +13,7 @@ export default function Navigation() {
   const navItems = [
     { label: 'About', href: '#about' },
     { label: 'Projects', href: '#projects' },
-    { label: 'Moments', href: '#moments' },
+    { label: 'Photography', href: '#photography' },
     { label: 'Contact', href: '/contact', isRoute: true }
   ];
 
@@ -42,19 +42,23 @@ export default function Navigation() {
   }, []);
 
   const handleNavClick = (item) => {
+    setIsMenuOpen(false);
+
     if (item.isRoute) {
-      router.push(item.href);
+      // Add a small delay to allow menu to close before transition
+      setTimeout(() => {
+        router.push(item.href);
+      }, 100);
     } else {
       if (pathname !== '/') {
-        router.push('/' + item.href);
+        setTimeout(() => {
+          router.push('/' + item.href);
+        }, 100);
       } else {
-        const element = document.querySelector(item.href);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
+        // 更新 URL hash
+        window.location.hash = item.href;
       }
     }
-    setIsMenuOpen(false);
   };
 
   const isContactPage = pathname === '/contact';
@@ -94,8 +98,10 @@ export default function Navigation() {
               <nav className="flex flex-col gap-3">
                 <button
                   onClick={() => {
-                    router.push('/');
                     setIsMenuOpen(false);
+                    setTimeout(() => {
+                      router.push('/');
+                    }, 100);
                   }}
                   className={`px-6 py-4 rounded-lg text-lg font-medium text-left transition-all duration-300 ${
                     pathname === '/'
@@ -134,15 +140,19 @@ export default function Navigation() {
           <nav className="flex items-center gap-2 bg-black/90 backdrop-blur-sm rounded-full px-3 py-3">
             {/* Logo */}
             <button
-              onClick={() => router.push('/')}
+              onClick={() => {
+                setTimeout(() => {
+                  router.push('/');
+                }, 100);
+              }}
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-gray-100 transition-all duration-300"
             >
               <Copyright size={16} />
               <div className="relative">
-                <span className="english-name block transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'Courier New', 'Monaco', monospace" }}>
+                <span className="english-name block opacity-100 transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'Courier New', 'Monaco', monospace" }}>
                   Coded by Coco Shen
                 </span>
-                <span className="chinese-name block absolute top-0 left-0 whitespace-nowrap transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'STXingkai', 'LiSu', 'Xingkai SC', cursive" }}>
+                <span className="chinese-name block absolute top-0 left-0 whitespace-nowrap opacity-0 pointer-events-none transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'STXingkai', 'LiSu', 'Xingkai SC', cursive" }}>
                   沈思其
                 </span>
               </div>
@@ -159,7 +169,11 @@ export default function Navigation() {
                   return (
                     <button
                       key={item.href}
-                      onClick={() => router.push(item.href)}
+                      onClick={() => {
+                        setTimeout(() => {
+                          router.push(item.href);
+                        }, 100);
+                      }}
                       className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                         isActive
                           ? 'bg-white text-black'
@@ -174,16 +188,7 @@ export default function Navigation() {
                 return (
                   <button
                     key={item.href}
-                    onClick={() => {
-                      if (pathname !== '/') {
-                        router.push('/' + item.href);
-                      } else {
-                        const element = document.querySelector(item.href);
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }
-                    }}
+                    onClick={() => handleNavClick(item)}
                     className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                       isActive
                         ? 'bg-white text-black'
