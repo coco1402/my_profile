@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { photosData, getCountriesForGlobe } from '../data/photosData';
-import { useLenis } from './SmoothScroll';
+import { useLenis } from './layout/SmoothScroll';
 
 // Dynamically import Globe to avoid SSR issues
 const Globe = dynamic(() => import('react-globe.gl'), { ssr: false });
@@ -91,7 +91,7 @@ export default function PhotoWall() {
   }, [showGallery, lenis]);
 
   return (
-    <section id="moments" className="py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-800 min-h-screen">
+    <section id="photography" className="py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-800 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
           <h2 className="text-5xl font-bold mb-4 text-white">
