@@ -62,7 +62,7 @@ export default function Hero() {
         </p>
 
         {/* Resume button - always rendered but initially invisible */}
-        <a
+        {/* <a
           href="/assets/cv/Siqi Shen CV.pdf"
           target="_blank"
           rel="noopener noreferrer"
@@ -74,7 +74,7 @@ export default function Hero() {
           }}
         >
           Resume
-        </a>
+        </a> */}
       </div>
 
       {/* Bottom section - always rendered but initially invisible */}

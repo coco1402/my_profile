@@ -77,16 +77,16 @@ export default function Timeline() {
       period: 'Oct 2022 - Present',
       description: (
         <div className="space-y-3">
-          <p><strong>Developed a full-stack Semantic Search extension for an enterprise e-discovery platform</strong></p>
+          <p><strong>Full-Stack Development</strong></p>
           <ul className="list-disc pl-5 space-y-2 text-sm">
-            <li>End-to-end ownership of functionality delivery, from initial design and development through deployment and client adoption.</li>
-            <li>Built a full-stack solution integrating an interactive JavaScript UI (ES6 modules, Rollup, Babel) with a Flask REST API for semantic retrieval using embedding models and vector similarity search.</li>
-            <li>Implemented secure authentication and authorisation (role-based access control, OpenID Connect, CSRF protection) and automated deployment with Azure CI/CD pipelines.</li>
+            <li>Developed enterprise web applications with JavaScript frontends and Python/Flask backends</li>
+            <li>Implemented semantic search functionality using embedding models and vector similarity search</li>
+            <li>Built secure authentication systems with role-based access control and automated CI/CD deployment pipelines</li>
           </ul>
-          <p className="mt-4"><strong>Automated workflows with Python scripting for an enterprise e-discovery platform</strong></p>
+          <p className="mt-4"><strong>Automation & Optimization</strong></p>
           <ul className="list-disc pl-5 space-y-2 text-sm">
-            <li>Eliminated manual file uploads by automating ingestion of text, audio, and images, while optimising workflows to run concurrently with SQL operations.</li>
-            <li>Built Python-based deduplication scripts to identify and remove duplicate documents across multiple workspaces and within single workspaces.</li>
+            <li>Automated data ingestion workflows for multiple file types using Python scripting</li>
+            <li>Developed deduplication solutions to optimize data processing and improve efficiency</li>
           </ul>
         </div>
       ),

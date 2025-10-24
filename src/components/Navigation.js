@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Menu, X, Copyright } from 'lucide-react';
+import MobileMenu from './MobileMenu';
 
 export default function Navigation() {
   const [activeSection, setActiveSection] = useState('');
@@ -136,44 +137,60 @@ export default function Navigation() {
         </>
       ) : (
         // Original Nav Bar for Other Pages
-        <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-6">
-          <nav className="flex items-center gap-2 bg-black/90 backdrop-blur-sm rounded-full px-3 py-3">
-            {/* Logo */}
-            <button
-              onClick={() => {
-                setTimeout(() => {
-                  router.push('/');
-                }, 100);
-              }}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-gray-100 transition-all duration-300"
-            >
-              <Copyright size={16} />
-              <div className="relative">
-                <span className="english-name block opacity-100 transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'Courier New', 'Monaco', monospace" }}>
-                  Coded by Coco Shen
-                </span>
-                <span className="chinese-name block absolute top-0 left-0 whitespace-nowrap opacity-0 pointer-events-none transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'STXingkai', 'LiSu', 'Xingkai SC', cursive" }}>
-                  沈思其
-                </span>
-              </div>
-            </button>
+        <>
+          <div className="fixed top-6 left-0 right-0 z-[120] flex justify-center px-6">
+            <nav className="flex items-center gap-2 bg-black/90 backdrop-blur-sm rounded-full px-3 py-3">
+              {/* Logo */}
+              <button
+                onClick={() => {
+                  setTimeout(() => {
+                    router.push('/');
+                  }, 100);
+                }}
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-gray-100 transition-all duration-300"
+              >
+                <Copyright size={16} />
+                <div className="relative">
+                  <span className="english-name block opacity-100 transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'Courier New', 'Monaco', monospace" }}>
+                    Coded by Coco Shen
+                  </span>
+                  <span className="chinese-name block absolute top-0 left-0 whitespace-nowrap opacity-0 pointer-events-none transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'STXingkai', 'LiSu', 'Xingkai SC', cursive" }}>
+                    沈思其
+                  </span>
+                </div>
+              </button>
 
-            {/* Nav Items */}
-            <div className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => {
-                const isActive = item.isRoute
-                  ? pathname === item.href
-                  : activeSection === item.href;
+              {/* Desktop Nav Items */}
+              <div className="hidden md:flex items-center gap-1">
+                {navItems.map((item) => {
+                  const isActive = item.isRoute
+                    ? pathname === item.href
+                    : activeSection === item.href;
 
-                if (item.isRoute) {
+                  if (item.isRoute) {
+                    return (
+                      <button
+                        key={item.href}
+                        onClick={() => {
+                          setTimeout(() => {
+                            router.push(item.href);
+                          }, 100);
+                        }}
+                        className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                          isActive
+                            ? 'bg-white text-black'
+                            : 'text-white hover:bg-white hover:text-black'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    );
+                  }
+
                   return (
                     <button
                       key={item.href}
-                      onClick={() => {
-                        setTimeout(() => {
-                          router.push(item.href);
-                        }, 100);
-                      }}
+                      onClick={() => handleNavClick(item)}
                       className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                         isActive
                           ? 'bg-white text-black'
@@ -183,25 +200,23 @@ export default function Navigation() {
                       {item.label}
                     </button>
                   );
-                }
+                })}
+              </div>
+            </nav>
+          </div>
 
-                return (
-                  <button
-                    key={item.href}
-                    onClick={() => handleNavClick(item)}
-                    className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                      isActive
-                        ? 'bg-white text-black'
-                        : 'text-white hover:bg-white hover:text-black'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
-        </div>
+          {/* Mobile Menu Component - moved to top right corner */}
+          <div className="fixed top-6 right-6 z-[120] md:hidden">
+            <MobileMenu
+              isMenuOpen={isMenuOpen}
+              setIsMenuOpen={setIsMenuOpen}
+              navItems={navItems}
+              activeSection={activeSection}
+              pathname={pathname}
+              handleNavClick={handleNavClick}
+            />
+          </div>
+        </>
       )}
 
       <style jsx>{`
