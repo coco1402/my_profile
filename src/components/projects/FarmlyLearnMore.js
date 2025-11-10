@@ -8,16 +8,31 @@ import RTMDemo from "./RTMDemo";
 
 export default function FarmlyLearnMore() {
   useEffect(() => {
-    // Scroll to top immediately and override browser's scroll restoration
-    window.history.scrollRestoration = 'manual';
+    // Immediately scroll to top (before anything else happens)
     window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
 
-    // Also scroll after a brief delay to ensure it takes effect
-    const timer = setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 0);
+    // Disable browser scroll restoration
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
 
-    return () => clearTimeout(timer);
+    // Force scroll after render and after Lenis initializes
+    const timers = [
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }, 0),
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }, 100)
+    ];
+
+    return () => timers.forEach(timer => clearTimeout(timer));
   }, []);
 
   return (
