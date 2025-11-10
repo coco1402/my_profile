@@ -15,10 +15,10 @@ export default function Hero() {
 
     let timer;
     if (isInitialLoad) {
-      // Initial load: short delay after PreLoader completes
+      // Initial load: minimal delay after PreLoader completes
       timer = setTimeout(() => {
         setStartTyping(true);
-      }, 300);
+      }, 50);
     } else {
       // Navigation: wait for page transition to complete (1.85s)
       timer = setTimeout(() => {
