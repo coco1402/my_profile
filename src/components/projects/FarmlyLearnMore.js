@@ -1,11 +1,16 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import InteractiveMockup from "./InteractiveMockup";
 import RTMDemo from "./RTMDemo";
 
 export default function FarmlyLearnMore() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-[#fafaf8] to-[#f1f5f9] font-[family-name:var(--font-montserrat)]">
       {/* Hero */}
