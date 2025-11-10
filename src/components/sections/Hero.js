@@ -3,17 +3,28 @@
 import { useState, useEffect } from 'react';
 import { ArrowDown } from 'lucide-react';
 import Image from 'next/image';
-import TextType from '../react-bits/TextType';
+import TextType from '../../react-bits/TextType';
 
 export default function Hero() {
   const [showElements, setShowElements] = useState(false);
   const [startTyping, setStartTyping] = useState(false);
 
   useEffect(() => {
-    // Wait for curve animation to complete before starting typing
-    const timer = setTimeout(() => {
-      setStartTyping(true);
-    }, 1800); // Match curve animation end time (1.5s delay + 0.3s duration)
+    // Check if this is initial load or navigation
+    const isInitialLoad = !window.sessionStorage.getItem('hasNavigated');
+
+    let timer;
+    if (isInitialLoad) {
+      // Initial load: short delay after PreLoader completes
+      timer = setTimeout(() => {
+        setStartTyping(true);
+      }, 300);
+    } else {
+      // Navigation: wait for page transition to complete (1.85s)
+      timer = setTimeout(() => {
+        setStartTyping(true);
+      }, 1850);
+    }
 
     return () => clearTimeout(timer);
   }, []);
@@ -85,7 +96,7 @@ export default function Hero() {
           transform: showElements ? 'translateY(0)' : 'translateY(20px)',
           transitionDelay: showElements ? '0.4s' : '0s'
         }}>
-          .v 2.1
+          .v 2.2
         </div>
 
         {/* Scroll indicator */}

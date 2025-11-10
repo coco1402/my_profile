@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 
 export default function Skills() {
@@ -21,7 +19,7 @@ export default function Skills() {
   return (
     <section id="skills" className="py-20 px-6 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-5xl font-bold mb-12">Tech <span className="underline decoration-4 decoration-black">Stack</span></h2>
+        <h2 className="text-5xl font-bold mb-12 font-[family-name:var(--font-montserrat)]">Tech <span className="underline decoration-4 decoration-black">Stack</span></h2>
 
         <div className="grid grid-cols-3 gap-6 max-w-4xl mx-auto">
           {skills.map((skill, index) => (

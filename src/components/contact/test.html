@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<style>
+  body {
+    background: #d9b3ff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    font-family: sans-serif;
+  }
+
+  #illustration {
+    width: 400px;
+  }
+
+  /* 手指敲击动画 */
+  @keyframes typing {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+    100% { transform: translateY(0); }
+  }
+
+  .typing #finger1,
+  .typing #finger2,
+  .typing #finger3 {
+    animation: typing 0.35s infinite ease-in-out;
+    transform-origin: bottom center;
+  }
+
+  textarea {
+    margin-top: 40px;
+    width: 380px;
+    height: 120px;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+  }
+</style>
+</head>
+<body>
+
+<h2>GO BUILD STUFF</h2>
+
+<!-- 非真实美术，仅用于预览动画动效结构 -->
+<svg id="illustration" viewBox="0 0 200 100">
+  <!-- 手掌 -->
+  <rect x="20" y="50" width="120" height="20" rx="8" fill="black" />
+
+  <!-- 三根手指（暂用矩形替代） -->
+  <rect id="finger1" x="30" y="35" width="20" height="20" rx="5" fill="black" />
+  <rect id="finger2" x="60" y="35" width="20" height="20" rx="5" fill="black" />
+  <rect id="finger3" x="90" y="35" width="20" height="20" rx="5" fill="black" />
+
+  <!-- 笔记本 -->
+  <rect x="20" y="75" width="160" height="10" rx="2" fill="black" />
+</svg>
+
+<textarea id="input" placeholder="Type here..."></textarea>
+
+<script>
+  const input = document.getElementById("input");
+  const svg = document.getElementById("illustration");
+
+  input.addEventListener("input", () => {
+    svg.classList.add("typing");
+  });
+
+  input.addEventListener("blur", () => {
+    svg.classList.remove("typing");
+  });
+</script>
+
+</body>
+</html>
+

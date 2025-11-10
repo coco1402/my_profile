@@ -3,8 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { photosData, getCountriesForGlobe } from '../data/photosData';
-import { useLenis } from './layout/SmoothScroll';
+import { photosData, getCountriesForGlobe } from '../../data/photosData';
+import { useLenis } from '../layout/SmoothScroll';
 
 // Dynamically import Globe to avoid SSR issues
 const Globe = dynamic(() => import('react-globe.gl'), { ssr: false });
@@ -15,6 +15,7 @@ export default function PhotoWall() {
   const [hoveredCountry, setHoveredCountry] = useState(null);
   const [showGallery, setShowGallery] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 1200, height: 600 });
+  const [loadingImages, setLoadingImages] = useState({});
   const globeEl = useRef();
   const containerRef = useRef();
   const lenis = useLenis();
@@ -63,6 +64,32 @@ export default function PhotoWall() {
       globeEl.current.controls().autoRotate = true;
       globeEl.current.controls().autoRotateSpeed = 0.5;
     }
+
+    // Stop rotation when mouse enters globe area, resume when mouse leaves
+    const globeContainer = containerRef.current;
+    if (globeContainer) {
+      const handleMouseEnter = () => {
+        if (globeEl.current) {
+          globeEl.current.controls().autoRotate = false;
+        }
+      };
+
+      const handleMouseLeave = () => {
+        if (globeEl.current) {
+          globeEl.current.controls().autoRotate = true;
+        }
+      };
+
+      globeContainer.addEventListener('mouseenter', handleMouseEnter);
+      globeContainer.addEventListener('mouseleave', handleMouseLeave);
+
+      return () => {
+        if (globeContainer) {
+          globeContainer.removeEventListener('mouseenter', handleMouseEnter);
+          globeContainer.removeEventListener('mouseleave', handleMouseLeave);
+        }
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -94,7 +121,7 @@ export default function PhotoWall() {
     <section id="photography" className="py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-800 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <h2 className="text-5xl font-bold mb-4 text-white">
+          <h2 className="text-5xl font-bold mb-4 text-white font-[family-name:var(--font-montserrat)]">
             A Map of <span className="underline decoration-4 decoration-blue-400">Memories</span>
           </h2>
           <p className="text-xl text-gray-300">Capturing moments from every place my camera has been</p>
@@ -183,7 +210,7 @@ export default function PhotoWall() {
                       </svg>
                     </button>
 
-                    <h3 className="text-4xl font-bold mb-2">{photosData[selectedCountry].name}</h3>
+                    <h3 className="text-4xl font-bold mb-2 font-[family-name:var(--font-montserrat)]">{photosData[selectedCountry].name}</h3>
                     <p className="text-sm mt-2 opacity-75">
                       {getFilteredPhotos(photosData[selectedCountry]).length} photos
                       {selectedYear !== 'all' && ` from ${selectedYear}`}
@@ -199,11 +226,21 @@ export default function PhotoWall() {
                             key={photo.id}
                             className="group relative overflow-hidden rounded-xl aspect-square cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                           >
+                            {/* Loading skeleton */}
+                            {loadingImages[photo.id] !== false && (
+                              <div className="absolute inset-0 bg-slate-700 animate-pulse" />
+                            )}
                             <Image
                               src={photo.src}
                               alt={`${photosData[selectedCountry].name} - ${photo.location}`}
                               fill
                               className="object-cover"
+                              loading="lazy"
+                              placeholder="blur"
+                              blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiLz4="
+                              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                              quality={75}
+                              onLoad={() => setLoadingImages(prev => ({ ...prev, [photo.id]: false }))}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                               <div className="absolute bottom-0 left-0 right-0 p-4 text-white">

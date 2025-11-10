@@ -5,71 +5,99 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Menu, X, Copyright } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 
+// Navigation items configuration
+// isRoute: true means it's a page route (not a hash link)
+const navItems = [
+  { label: 'About', href: '#about' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Photography', href: '#photography' },
+  { label: 'Contact', href: '/contact', isRoute: true }
+];
+
 export default function Navigation() {
+  // Track which section is currently active based on scroll position
   const [activeSection, setActiveSection] = useState('');
+  // Control mobile menu open/close state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
-  const navItems = [
-    { label: 'About', href: '#about' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Photography', href: '#photography' },
-    { label: 'Contact', href: '/contact', isRoute: true }
-  ];
-
+  // Scroll listener: Detect which section user is viewing
   useEffect(() => {
     const handleScroll = () => {
+      // Extract section IDs from navItems (remove '#' prefix)
       const sections = navItems.map(item => item.href.replace('#', ''));
+      // Add 100px offset so highlighting happens slightly before reaching the section
       const scrollPosition = window.scrollY + 100;
 
+      // Loop through each section to find which one is currently in view
       for (const sectionId of sections) {
         const section = document.getElementById(sectionId);
         if (section) {
           const sectionTop = section.offsetTop;
           const sectionBottom = sectionTop + section.offsetHeight;
 
+          // Check if scroll position is within this section
           if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+            // Update active section to highlight corresponding nav button
             setActiveSection(`#${sectionId}`);
-            break;
+            break; // Stop checking once we find the active section
           }
         }
       }
     };
 
-    handleScroll(); // Initial check
+    handleScroll(); // Run once on mount to set initial state
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Handle navigation click
   const handleNavClick = (item) => {
-    setIsMenuOpen(false);
+    setIsMenuOpen(false); // Close mobile menu if open
 
     if (item.isRoute) {
-      // Add a small delay to allow menu to close before transition
+      // For page routes (like /contact), use router.push
+      // Add delay to let menu close animation complete
       setTimeout(() => {
         router.push(item.href);
       }, 100);
     } else {
+      // For hash links (like #about)
       if (pathname !== '/') {
+        // If not on home page, navigate to home first then scroll to section
         setTimeout(() => {
           router.push('/' + item.href);
         }, 100);
       } else {
-        // 更新 URL hash
-        window.location.hash = item.href;
+        // If already on home page, check if hash is already set
+        const currentHash = window.location.hash;
+        if (currentHash === item.href) {
+          // Hash is already set, force scroll programmatically
+          const element = document.querySelector(item.href);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        } else {
+          // Update hash to scroll to section
+          window.location.hash = item.href;
+        }
       }
     }
   };
 
+  // Determine which navigation style to use
   const isContactPage = pathname === '/contact';
+  const isFarmlyOverviewPage = pathname === '/projects/farmly-overview';
+  const isPortfolioOverviewPage = pathname === '/projects/portfolio-overview';
+  const useHamburgerMenu = isContactPage || isFarmlyOverviewPage || isPortfolioOverviewPage;
 
   return (
     <>
-      {isContactPage ? (
-        // Hamburger Menu for Contact Page
+      {useHamburgerMenu ? (
+        // Hamburger Menu Style (for Contact and Farmly Overview pages)
         <>
-          {/* Hamburger Menu Button */}
+          {/* Hamburger Menu Button - Fixed to top right */}
           <div className="fixed top-6 right-6 z-50">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -80,7 +108,7 @@ export default function Navigation() {
             </button>
           </div>
 
-          {/* Mobile Menu Overlay */}
+          {/* Dark overlay that appears when menu is open */}
           <div
             className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${
               isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -88,15 +116,16 @@ export default function Navigation() {
             onClick={() => setIsMenuOpen(false)}
           />
 
-          {/* Slide-in Menu */}
+          {/* Slide-in menu panel from the right */}
           <div
             className={`fixed top-0 right-0 h-full w-80 bg-[#e8e4dc] shadow-2xl z-40 transform transition-transform duration-300 ease-in-out ${
               isMenuOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
             <div className="flex flex-col h-full pt-24 px-8">
-              {/* Nav Items */}
+              {/* Navigation Items */}
               <nav className="flex flex-col gap-3">
+                {/* Home button */}
                 <button
                   onClick={() => {
                     setIsMenuOpen(false);
@@ -112,7 +141,9 @@ export default function Navigation() {
                 >
                   Home
                 </button>
+                {/* Dynamic nav items */}
                 {navItems.map((item) => {
+                  // Check if this item should be highlighted
                   const isActive = item.isRoute
                     ? pathname === item.href
                     : activeSection === item.href;
@@ -136,11 +167,11 @@ export default function Navigation() {
           </div>
         </>
       ) : (
-        // Original Nav Bar for Other Pages
+        // Top Navigation Bar Style (for Home page)
         <>
           <div className="fixed top-6 left-0 right-0 z-[120] flex justify-center px-6">
             <nav className="flex items-center gap-2 bg-black/90 backdrop-blur-sm rounded-full px-3 py-3">
-              {/* Logo */}
+              {/* Logo Button - switches between English and Chinese on hover */}
               <button
                 onClick={() => {
                   setTimeout(() => {
@@ -150,23 +181,27 @@ export default function Navigation() {
                 className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black hover:bg-gray-100 transition-all duration-300"
               >
                 <Copyright size={16} />
-                <div className="relative">
-                  <span className="english-name block opacity-100 transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'Courier New', 'Monaco', monospace" }}>
-                    Coded by Coco Shen
+                <div className="relative flex items-center h-5">
+                  {/* English name - visible by default */}
+                  <span className="english-name flex items-center opacity-100 transition-opacity duration-500 ease-in-out text-sm font-medium">
+                    Coded by Coco
                   </span>
-                  <span className="chinese-name block absolute top-0 left-0 whitespace-nowrap opacity-0 pointer-events-none transition-opacity duration-500 ease-in-out text-sm font-semibold" style={{ fontFamily: "'STXingkai', 'LiSu', 'Xingkai SC', cursive" }}>
+                  {/* Chinese name - visible on hover */}
+                  <span className="chinese-name flex items-center absolute top-0 left-0 h-full whitespace-nowrap opacity-0 pointer-events-none transition-opacity duration-500 ease-in-out text-xl font-bold -translate-y-0.5" style={{ fontFamily: "'STXingkai', 'LiSu', 'Xingkai SC', cursive" }}>
                     沈思其
                   </span>
                 </div>
               </button>
 
-              {/* Desktop Nav Items */}
+              {/* Desktop Navigation Items - hidden on mobile */}
               <div className="hidden md:flex items-center gap-1">
                 {navItems.map((item) => {
+                  // Determine if this item should be highlighted
                   const isActive = item.isRoute
                     ? pathname === item.href
                     : activeSection === item.href;
 
+                  // For page routes (like /contact), use direct routing
                   if (item.isRoute) {
                     return (
                       <button
@@ -187,6 +222,7 @@ export default function Navigation() {
                     );
                   }
 
+                  // For hash links (like #about), use handleNavClick
                   return (
                     <button
                       key={item.href}
@@ -205,7 +241,7 @@ export default function Navigation() {
             </nav>
           </div>
 
-          {/* Mobile Menu Component - moved to top right corner */}
+          {/* Mobile Menu Component - only visible on mobile screens */}
           <div className="fixed top-6 right-6 z-[120] md:hidden">
             <MobileMenu
               isMenuOpen={isMenuOpen}
@@ -219,6 +255,7 @@ export default function Navigation() {
         </>
       )}
 
+      {/* Styles for logo hover effect */}
       <style jsx>{`
         .english-name {
           opacity: 1;

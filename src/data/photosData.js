@@ -1,6 +1,6 @@
 // Photo data organized by country and year
 export const photosData = {
-  // 中国 - Shanghai
+  // China - Shanghai
   China: {
     name: 'China',
     nameZh: '中国',

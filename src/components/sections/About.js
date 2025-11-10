@@ -1,11 +1,10 @@
-'use client';
 import Image from 'next/image';
 
 export default function About() {
   return (
     <section id="about" className="min-h-screen flex items-center py-20 px-6 bg-gray-50">
       <div className="max-w-7xl mx-auto w-full">
-        <h2 className="text-5xl font-bold mb-12">About <span className="underline decoration-4 decoration-black">Me</span></h2>
+        <h2 className="text-5xl font-bold mb-12 font-[family-name:var(--font-montserrat)]">About <span className="underline decoration-4 decoration-black">Me</span></h2>
         <div className="grid md:grid-cols-2 gap-12">
           <div>
             <div className="w-full aspect-square rounded-3xl mb-8 overflow-hidden shadow-xl">

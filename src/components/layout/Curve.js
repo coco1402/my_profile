@@ -6,7 +6,8 @@ import { usePathname } from 'next/navigation';
 const routes = {
     "/": "Home",
     "/about": "About",
-    "/contact": "Contact"
+    "/contact": "Contact",
+    "/projects/farmly-overview": "Farmly Overview"
 };
 
 const anim = (variants) => {
@@ -57,7 +58,8 @@ export default function Curve({ children, backgroundColor }) {
     );
 }
 
-const SVG = ({ height, width }) => {
+// Helper function to generate curve paths - can be reused across components
+export const getCurvePaths = (width, height) => {
     const initialPath = `
         M0 300
         Q${width/2} 0 ${width} 300
@@ -73,6 +75,12 @@ const SVG = ({ height, width }) => {
         Q${width/2} ${height} 0 ${height}
         L0 0
     `;
+
+    return { initialPath, targetPath };
+};
+
+const SVG = ({ height, width }) => {
+    const { initialPath, targetPath } = getCurvePaths(width, height);
 
     return (
         <motion.svg

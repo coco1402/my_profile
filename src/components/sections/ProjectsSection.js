@@ -1,26 +1,28 @@
 'use client';
 
-import { ExternalLink } from 'lucide-react';
 import Image from 'next/image';
-import myProfileImg from '../assets/profile/my_profile.png';
-import farmlyLogo from '../assets/profile/farmlyLogo.png';
-import MagicBento from '../react-bits/MagicBento';
+import myProfileImg from '../../assets/profile/my_profile.png';
+import farmlyLogo from '../../assets/profile/farmlyLogo.png';
+import MagicBento from '../../react-bits/MagicBento';
+import Link from 'next/link';
 
-export default function Projects() {
+export default function ProjectsSection() {
   const projects = [
     {
       title: 'Full-Stack Mobile Marketplace Application',
       description: 'Built mobile app for buying/selling goods. Developed React Native UI with Firebase Auth, Firestore, real-time messaging via Gifted Chat, and geolocation filtering. Built RESTful APIs with Node.js/Express and MongoDB, deployed via Render.',
       tags: ['React Native', 'Node.js', 'MongoDB', 'Firebase', 'Express'],
       github: 'https://github.com/coco1402/farmly-app',
+      learnMore: '/projects/farmly-overview', 
       image: farmlyLogo,
       isEmoji: false
     },
     {
-      title: 'Portfolio Website',
+      title: 'Portfolio Website with Next.js',
       description: 'Personal portfolio website featuring smooth scrolling animations with Lenis, framer motion page transitions, interactive components, and modern UI. Deployed on Vercel.',
       tags: ['Next.js', 'React', 'Tailwind CSS', 'Lenis', 'Vercel'],
       github: 'https://github.com/coco1402/my_profile',
+      learnMore: '/projects/portfolio-overview',
       image: myProfileImg,
       isEmoji: false
     }
@@ -59,16 +61,15 @@ export default function Projects() {
             ))}
           </div>
 
-          {/* Link */}
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Learn More Link */}
+          <Link
+            href={project.learnMore || project.github}
+            {...(!project.learnMore && { target: "_blank", rel: "noopener noreferrer" })}
             className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 font-semibold text-sm transition-all hover:gap-3"
             onClick={(e) => e.stopPropagation()}
           >
-            Learn More <ExternalLink size={14} />
-          </a>
+            Learn More →
+          </Link>
         </div>
       </div>
     )
@@ -77,9 +78,12 @@ export default function Projects() {
   return (
     <section id="projects" className="min-h-screen flex flex-col justify-center py-20 px-6 bg-white">
       <div className="max-w-7xl mx-auto w-full">
-        <h2 className="text-5xl font-bold mb-12">
-          My <span className="underline decoration-4 decoration-black">Projects</span>
-        </h2>
+        <div className="mb-12">
+          <h2 className="text-5xl font-bold mb-4 font-[family-name:var(--font-montserrat)]">
+            My <span className="underline decoration-4 decoration-black">Works</span>
+          </h2>
+          <p className="text-xl text-gray-600">Transforming ideas from scratch into fully developed products.</p>
+        </div>
 
         <div className="flex justify-center">
           <MagicBento

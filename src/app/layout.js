@@ -1,16 +1,33 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Lato, Montserrat, Londrina_Solid } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import PageTransition from "@/components/layout/PageTransition";
+import PreLoader from "@/components/layout/PreLoader";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const lato = Lato({
+  weight: ['300', '400', '700', '900'],
   subsets: ["latin"],
+  variable: "--font-lato",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const montserrat = Montserrat({
+  weight: ['700', '900'],
   subsets: ["latin"],
+  variable: "--font-montserrat",
+});
+
+const londrinaSolid = Londrina_Solid({
+  weight: ['900'],
+  subsets: ["latin"],
+  variable: "--font-londrina-solid",
+});
+
+const rainbowColors = localFont({
+  src: "../../public/rainbow-colors-font/RainbowColorsRegular-yaq2.ttf",
+  variable: "--font-rainbow-colors",
+  display: "swap",
+  weight: "400",
 });
 
 export const metadata = {
@@ -29,8 +46,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${lato.variable} ${montserrat.variable} ${londrinaSolid.variable} ${rainbowColors.variable} font-sans antialiased`}
       >
+        <PreLoader />
         <SmoothScroll>
           <PageTransition>
             {children}

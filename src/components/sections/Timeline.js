@@ -83,7 +83,7 @@ export default function Timeline() {
             <li>Implemented semantic search functionality using embedding models and vector similarity search</li>
             <li>Built secure authentication systems with role-based access control and automated CI/CD deployment pipelines</li>
           </ul>
-          <p className="mt-4"><strong>Automation & Optimization</strong></p>
+          <p className="mt-4"><strong>Automation & optimisation</strong></p>
           <ul className="list-disc pl-5 space-y-2 text-sm">
             <li>Automated data ingestion workflows for multiple file types using Python scripting</li>
             <li>Developed deduplication solutions to optimize data processing and improve efficiency</li>
@@ -99,17 +99,17 @@ export default function Timeline() {
   return (
     <section id="timeline" className="py-20 px-6 bg-black" ref={sectionRef}>
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-5xl font-bold mb-12 text-white">
+        <h2 className="text-5xl font-bold mb-12 text-white font-[family-name:var(--font-montserrat)]">
           My <span className="underline decoration-4 decoration-white">Journey</span>
         </h2>
 
         <div className="relative">
-          {/* Curved timeline path */}
+          {/* Curved timeline path - Hidden on mobile, shown on desktop */}
           <svg
-            className="absolute left-0 w-full pointer-events-none"
+            className="absolute left-0 w-full pointer-events-none hidden md:block"
             style={{ top: '0', height: '100%' }}
             viewBox="0 0 1000 1000"
-            preserveAspectRatio="xMidYStretch"
+            preserveAspectRatio="none"
           >
             <defs>
               <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -131,10 +131,11 @@ export default function Timeline() {
           </svg>
 
           {/* Timeline events */}
-          <div className="space-y-24">
+          <div className="md:space-y-24 space-y-0 relative">
             {timelineEvents.map((event, index) => (
               <div key={index} className="relative" style={{ minHeight: '120px' }}>
-                <div className="flex items-center gap-12">
+                {/* Desktop layout */}
+                <div className="hidden md:flex items-center gap-12">
                   {/* Left content */}
                   <div className="w-[45%]">
                     {event.position === 'left' && (
@@ -169,6 +170,26 @@ export default function Timeline() {
                         <div className="text-sm text-gray-400 leading-relaxed">{event.description}</div>
                       </div>
                     )}
+                  </div>
+                </div>
+
+                {/* Mobile layout - Single column */}
+                <div className="md:hidden flex gap-4 mb-12">
+                  {/* Year badge */}
+                  <div className="flex-shrink-0">
+                    <div
+                      className="px-3 py-1 rounded-md text-xs font-bold text-black border border-white text-center whitespace-nowrap"
+                      style={{ backgroundColor: event.color }}
+                    >
+                      {event.year}
+                    </div>
+                  </div>
+
+                  {/* Content - All on the right */}
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-white mb-1">{event.title}</h3>
+                    <p className="text-gray-300 mb-2 text-sm">{event.subtitle}</p>
+                    <div className="text-sm text-gray-400 leading-relaxed">{event.description}</div>
                   </div>
                 </div>
               </div>

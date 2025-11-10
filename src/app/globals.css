@@ -8,8 +8,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-lato);
 }
 
 * {
@@ -19,7 +18,7 @@
 body {
   background: #ffffff;
   color: #000000;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-lato), 'Lato', sans-serif;
 }
 
 /* Page transition animations */
@@ -70,4 +69,14 @@ body {
   z-index: 3;
   transform: translateX(-50%);
   text-align: center;
+}
+
+/* Hide scrollbar for horizontal scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

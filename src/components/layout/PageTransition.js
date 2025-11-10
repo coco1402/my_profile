@@ -2,10 +2,13 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { getCurvePaths } from './Curve';
 
 const routes = {
   "/": "Home",
-  "/contact": "Contact"
+  "/contact": "Contact",
+  "/projects/farmly-overview": "Farmly Overview",
+  "/projects/portfolio-overview": "Portfolio Overview"
 };
 
 const hashRoutes = {
@@ -13,6 +16,28 @@ const hashRoutes = {
   "#projects": "Projects",
   "#photography": "Photography",
   "#contact": "Contact"
+};
+
+// Page color configuration
+const pageColors = {
+  '/': '#d97757',
+  '/contact': '#d97757', //Orange for Contact
+  '/projects/farmly-overview': '#4CAF50', // Green for Farmly
+  '/projects/portfolio-overview': '#7c3aed', // Purple for Portfolio
+};
+
+// Helper function to determine transition color based on navigation direction
+const getTransitionColor = (fromPath, toPath) => {
+  const isHome = (path) => path === '/' || path.includes('#');
+  const isReturningHome = !isHome(fromPath) && isHome(toPath);
+
+  // When returning to home from any special page, use black
+  if (isReturningHome) {
+    return '#000000';
+  }
+
+  // Otherwise, use the target page's color (or default orange)
+  return pageColors[toPath] || '#d97757';
 };
 
 // Helper function to standardize animation props
@@ -122,6 +147,7 @@ export default function PageTransition({ children }) {
   const [hasNavigated, setHasNavigated] = useState(false);
   const [previousPathname, setPreviousPathname] = useState(pathname);
   const [isLeavingContact, setIsLeavingContact] = useState(false);
+  const [transitionColor, setTransitionColor] = useState('#d97757');
 
   // Calculate target page name in real-time (so both exit and enter use the new name)
   const getRouteName = () => {
@@ -148,18 +174,21 @@ export default function PageTransition({ children }) {
 
   const routeName = getRouteName();
 
-  // Set transition color based on whether leaving contact page
-  const transitionColor = isLeavingContact ? '#000000' : '#d97757';
-
   // Listen to pathname changes
   useEffect(() => {
     // Detect if it's a real page route change (not hash change)
     const isPageChange = pathname !== previousPathname;
 
     if (isPageChange) {
-      // Check if leaving /contact
-      const leavingContact = previousPathname === '/contact' && pathname !== '/contact';
-      setIsLeavingContact(leavingContact);
+      // Calculate transition color based on navigation direction
+      const color = getTransitionColor(previousPathname, pathname);
+      setTransitionColor(color);
+
+      // Check if leaving a special page (contact or farmly-overview) to return home
+      const isLeavingSpecialPage =
+        (previousPathname === '/contact' || previousPathname === '/projects/farmly-overview')
+        && (pathname === '/' || pathname.includes('#'));
+      setIsLeavingContact(isLeavingSpecialPage);
 
       setPreviousPathname(pathname);
       setHasNavigated(true); // Set to true for each page change
@@ -190,21 +219,9 @@ export default function PageTransition({ children }) {
     };
   }, []);
 
-  const initialPath = dimensions.width ? `
-    M0 300
-    Q${dimensions.width/2} 0 ${dimensions.width} 300
-    L${dimensions.width} ${dimensions.height + 300}
-    Q${dimensions.width/2} ${dimensions.height + 600} 0 ${dimensions.height + 300}
-    L0 0
-  ` : '';
-
-  const targetPath = dimensions.width ? `
-    M0 300
-    Q${dimensions.width/2} 0 ${dimensions.width} 300
-    L${dimensions.width} ${dimensions.height}
-    Q${dimensions.width/2} ${dimensions.height} 0 ${dimensions.height}
-    L0 0
-  ` : '';
+  const { initialPath, targetPath } = dimensions.width
+    ? getCurvePaths(dimensions.width, dimensions.height)
+    : { initialPath: '', targetPath: '' };
 
   return (
     <>
