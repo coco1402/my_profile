@@ -1,5 +1,4 @@
 import { Lato, Montserrat, Londrina_Solid } from "next/font/google";
-import localFont from "next/font/local";
 import "./globals.css";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import PageTransition from "@/components/layout/PageTransition";
@@ -23,13 +22,6 @@ const londrinaSolid = Londrina_Solid({
   variable: "--font-londrina-solid",
 });
 
-const rainbowColors = localFont({
-  src: "../../public/rainbow-colors-font/RainbowColorsRegular-yaq2.ttf",
-  variable: "--font-rainbow-colors",
-  display: "swap",
-  weight: "400",
-});
-
 export const metadata = {
   title: "Coco Shen - Full Stack Engineer | Portfolio",
   description: "Full Stack Engineer based in London with expertise in JavaScript, React, Python, Node.js, and Azure. Explore my projects, experience, and skills.",
@@ -46,7 +38,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${lato.variable} ${montserrat.variable} ${londrinaSolid.variable} ${rainbowColors.variable} font-sans antialiased`}
+        className={`${lato.variable} ${montserrat.variable} ${londrinaSolid.variable} font-sans antialiased`}
       >
         <PreLoader />
         <SmoothScroll>
