@@ -21,10 +21,8 @@ export default function Portfolio() {
     if (isInitialLoad) {
       // Initial load: wait for preloader to complete
       const handlePreloaderComplete = () => {
-        // Wait for preloader fade out (800ms) before rendering Hero
-        setTimeout(() => {
-          setShowHero(true);
-        }, 800);
+        // Render Hero immediately when preloader completes
+        setShowHero(true);
       };
 
       window.addEventListener('preloaderComplete', handlePreloaderComplete);
