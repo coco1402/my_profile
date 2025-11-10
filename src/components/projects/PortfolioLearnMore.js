@@ -6,7 +6,16 @@ import Link from "next/link";
 
 export default function PortfolioLearnMore() {
   useEffect(() => {
+    // Scroll to top immediately and override browser's scroll restoration
+    window.history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
+
+    // Also scroll after a brief delay to ensure it takes effect
+    const timer = setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
